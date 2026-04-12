@@ -32,7 +32,7 @@
     }
   }
 
-  // Capture clicks on choice elements
+  // 捕获选项元素的点击事件
   document.addEventListener('click', (e) => {
     const target = e.target.closest('[data-choice]');
     if (!target) return;
@@ -44,24 +44,24 @@
       id: target.id || null
     });
 
-    // Update indicator bar (defer so toggleSelect runs first)
+    // 更新指示条（延迟执行以便 toggleSelect 先运行）
     setTimeout(() => {
       const indicator = document.getElementById('indicator-text');
       if (!indicator) return;
       const container = target.closest('.options') || target.closest('.cards');
       const selected = container ? container.querySelectorAll('.selected') : [];
       if (selected.length === 0) {
-        indicator.textContent = 'Click an option above, then return to the terminal';
+        indicator.textContent = '点击上方选项，然后返回终端';
       } else if (selected.length === 1) {
         const label = selected[0].querySelector('h3, .content h3, .card-body h3')?.textContent?.trim() || selected[0].dataset.choice;
-        indicator.innerHTML = '<span class="selected-text">' + label + ' selected</span> — return to terminal to continue';
+        indicator.innerHTML = '<span class="selected-text">' + label + ' 已选择</span> — 返回终端继续';
       } else {
-        indicator.innerHTML = '<span class="selected-text">' + selected.length + ' selected</span> — return to terminal to continue';
+        indicator.innerHTML = '<span class="selected-text">' + selected.length + ' 已选择</span> — 返回终端继续';
       }
     }, 0);
   });
 
-  // Frame UI: selection tracking
+  // Frame UI：选择追踪
   window.selectedChoice = null;
 
   window.toggleSelect = function(el) {
@@ -78,7 +78,7 @@
     window.selectedChoice = el.dataset.choice;
   };
 
-  // Expose API for explicit use
+  // 暴露 API 以便显式使用
   window.brainstorm = {
     send: sendEvent,
     choice: (value, metadata = {}) => sendEvent({ type: 'choice', value, ...metadata })

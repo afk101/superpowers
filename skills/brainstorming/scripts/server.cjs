@@ -3,7 +3,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-// ========== WebSocket Protocol (RFC 6455) ==========
+// ========== WebSocket 协议 (RFC 6455) ==========
 
 const OPCODES = { TEXT: 0x01, CLOSE: 0x08, PING: 0x09, PONG: 0x0A };
 const WS_MAGIC = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
@@ -45,7 +45,7 @@ function decodeFrame(buffer) {
   let payloadLen = secondByte & 0x7F;
   let offset = 2;
 
-  if (!masked) throw new Error('Client frames must be masked');
+  if (!masked) throw new Error('客户端帧必须被掩码覆盖');
 
   if (payloadLen === 126) {
     if (buffer.length < 4) return null;
@@ -71,7 +71,7 @@ function decodeFrame(buffer) {
   return { opcode, payload: data, bytesConsumed: totalLen };
 }
 
-// ========== Configuration ==========
+// ========== 配置 ==========
 
 const PORT = process.env.BRAINSTORM_PORT || (49152 + Math.floor(Math.random() * 16383));
 const HOST = process.env.BRAINSTORM_HOST || '127.0.0.1';
@@ -87,7 +87,7 @@ const MIME_TYPES = {
   '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.svg': 'image/svg+xml'
 };
 
-// ========== Templates and Constants ==========
+// ========== 模板和常量 ==========
 
 const WAITING_PAGE = `<!DOCTYPE html>
 <html>
@@ -95,14 +95,14 @@ const WAITING_PAGE = `<!DOCTYPE html>
 <style>body { font-family: system-ui, sans-serif; padding: 2rem; max-width: 800px; margin: 0 auto; }
 h1 { color: #333; } p { color: #666; }</style>
 </head>
-<body><h1>Brainstorm Companion</h1>
-<p>Waiting for the agent to push a screen...</p></body></html>`;
+<body><h1>Brainstorm 伴侣</h1>
+<p>等待代理推送屏幕...</p></body></html>`;
 
 const frameTemplate = fs.readFileSync(path.join(__dirname, 'frame-template.html'), 'utf-8');
 const helperScript = fs.readFileSync(path.join(__dirname, 'helper.js'), 'utf-8');
 const helperInjection = '<script>\n' + helperScript + '\n</script>';
 
-// ========== Helper Functions ==========
+// ========== 辅助函数 ==========
 
 function isFullDocument(html) {
   const trimmed = html.trimStart().toLowerCase();
@@ -124,7 +124,7 @@ function getNewestScreen() {
   return files.length > 0 ? files[0].path : null;
 }
 
-// ========== HTTP Request Handler ==========
+// ========== HTTP 请求处理器 ==========
 
 function handleRequest(req, res) {
   touchActivity();
@@ -147,7 +147,7 @@ function handleRequest(req, res) {
     const filePath = path.join(CONTENT_DIR, path.basename(fileName));
     if (!fs.existsSync(filePath)) {
       res.writeHead(404);
-      res.end('Not found');
+      res.end('未找到');
       return;
     }
     const ext = path.extname(filePath).toLowerCase();
@@ -160,7 +160,7 @@ function handleRequest(req, res) {
   }
 }
 
-// ========== WebSocket Connection Handling ==========
+// ========== WebSocket 连接处理 ==========
 
 const clients = new Set();
 
@@ -226,7 +226,7 @@ function handleMessage(text) {
   try {
     event = JSON.parse(text);
   } catch (e) {
-    console.error('Failed to parse WebSocket message:', e.message);
+    console.error('解析 WebSocket 消息失败:', e.message);
     return;
   }
   touchActivity();
@@ -244,28 +244,28 @@ function broadcast(msg) {
   }
 }
 
-// ========== Activity Tracking ==========
+// ========== 活动追踪 ==========
 
-const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+const IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 分钟
 let lastActivity = Date.now();
 
 function touchActivity() {
   lastActivity = Date.now();
 }
 
-// ========== File Watching ==========
+// ========== 文件监控 ==========
 
 const debounceTimers = new Map();
 
-// ========== Server Startup ==========
+// ========== 服务器启动 ==========
 
 function startServer() {
   if (!fs.existsSync(CONTENT_DIR)) fs.mkdirSync(CONTENT_DIR, { recursive: true });
   if (!fs.existsSync(STATE_DIR)) fs.mkdirSync(STATE_DIR, { recursive: true });
 
-  // Track known files to distinguish new screens from updates.
-  // macOS fs.watch reports 'rename' for both new files and overwrites,
-  // so we can't rely on eventType alone.
+  // 追踪已知文件以区分新屏幕和更新。
+  // macOS fs.watch 对新文件和覆盖都报告 'rename',
+  // 所以我们不能仅依赖 eventType。
   const knownFiles = new Set(
     fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.html'))
   );
@@ -281,7 +281,7 @@ function startServer() {
       debounceTimers.delete(filename);
       const filePath = path.join(CONTENT_DIR, filename);
 
-      if (!fs.existsSync(filePath)) return; // file was deleted
+      if (!fs.existsSync(filePath)) return; // 文件已被删除
       touchActivity();
 
       if (!knownFiles.has(filename)) {
@@ -316,16 +316,16 @@ function startServer() {
     try { process.kill(ownerPid, 0); return true; } catch (e) { return e.code === 'EPERM'; }
   }
 
-  // Check every 60s: exit if owner process died or idle for 30 minutes
+  // 每 60 秒检查一次：如果所有者进程已死亡或空闲 30 分钟则退出
   const lifecycleCheck = setInterval(() => {
     if (!ownerAlive()) shutdown('owner process exited');
     else if (Date.now() - lastActivity > IDLE_TIMEOUT_MS) shutdown('idle timeout');
   }, 60 * 1000);
   lifecycleCheck.unref();
 
-  // Validate owner PID at startup. If it's already dead, the PID resolution
-  // was wrong (common on WSL, Tailscale SSH, and cross-user scenarios).
-  // Disable monitoring and rely on the idle timeout instead.
+  // 在启动时验证所有者 PID。如果已经死亡，则 PID 解析
+  // 错误（常见于 WSL、Tailscale SSH 和跨用户场景）。
+  // 禁用监控并依赖空闲超时。
   if (ownerPid) {
     try { process.kill(ownerPid, 0); }
     catch (e) {

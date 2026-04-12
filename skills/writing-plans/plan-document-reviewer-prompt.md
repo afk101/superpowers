@@ -1,49 +1,48 @@
-# Plan Document Reviewer Prompt Template
+# 计划文档审查者提示词模板
 
-Use this template when dispatching a plan document reviewer subagent.
+当调度计划文档审查子代理时使用此模板。
 
-**Purpose:** Verify the plan is complete, matches the spec, and has proper task decomposition.
+**目的:** 验证计划是否完整、是否符合规格说明以及任务分解是否合理。
 
-**Dispatch after:** The complete plan is written.
+**调度时机:** 完整计划编写完成后。
 
 ```
 Task tool (general-purpose):
   description: "Review plan document"
   prompt: |
-    You are a plan document reviewer. Verify this plan is complete and ready for implementation.
+    你是一名计划文档审查者。请验证此计划是否完整并准备好进行实施。
 
-    **Plan to review:** [PLAN_FILE_PATH]
-    **Spec for reference:** [SPEC_FILE_PATH]
+    **待审查的计划:** [PLAN_FILE_PATH]
+    **参考规格说明:** [SPEC_FILE_PATH]
 
-    ## What to Check
+    ## 检查内容
 
-    | Category | What to Look For |
+    | 类别 | 查找内容 |
     |----------|------------------|
-    | Completeness | TODOs, placeholders, incomplete tasks, missing steps |
-    | Spec Alignment | Plan covers spec requirements, no major scope creep |
-    | Task Decomposition | Tasks have clear boundaries, steps are actionable |
-    | Buildability | Could an engineer follow this plan without getting stuck? |
+    | 完整性 | TODOs、占位符、未完成任务、缺失步骤 |
+    | 规格对齐 | 计划覆盖规格要求，无重大范围蔓延 |
+    | 任务分解 | 任务边界清晰，步骤可操作 |
+    | 可构建性 | 工程师能否按照此计划执行而不会卡住？ |
 
-    ## Calibration
+    ## 校准标准
 
-    **Only flag issues that would cause real problems during implementation.**
-    An implementer building the wrong thing or getting stuck is an issue.
-    Minor wording, stylistic preferences, and "nice to have" suggestions are not.
+    **仅标记会在实施过程中导致实际问题的问题。**
+    实施者构建错误的内容或卡住属于问题。
+    措辞、风格偏好和"锦上添花"的建议不属于问题。
 
-    Approve unless there are serious gaps — missing requirements from the spec,
-    contradictory steps, placeholder content, or tasks so vague they can't be acted on.
+    除非存在严重缺陷——规格中缺失需求、步骤矛盾、占位符内容或任务过于模糊无法执行——否则应予批准。
 
-    ## Output Format
+    ## 输出格式
 
-    ## Plan Review
+    ## 计划审查
 
-    **Status:** Approved | Issues Found
+    **状态:** Approved | Issues Found
 
-    **Issues (if any):**
-    - [Task X, Step Y]: [specific issue] - [why it matters for implementation]
+    **问题（如有）:**
+    - [任务 X, 步骤 Y]: [具体问题] - [对实施的影响]
 
-    **Recommendations (advisory, do not block approval):**
-    - [suggestions for improvement]
+    **建议（仅供参考，不阻止批准）:**
+    - [改进建议]
 ```
 
-**Reviewer returns:** Status, Issues (if any), Recommendations
+**审查者返回:** 状态、问题（如有）、建议
