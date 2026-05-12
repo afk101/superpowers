@@ -41,7 +41,7 @@ verification-before-completion
 ### 各步说明
 
 **1. `superpowers:brainstorming`**
-写任何代码前必须先完成此步。探索上下文、逐一澄清需求、提出方案、分段获得用户批准、写入 spec 文档并提交、规范自审、等待用户最终批准。
+写任何代码前必须先完成此步。探索上下文、逐一澄清需求、提出方案、分段获得用户批准、写入 spec 文档和 findings 文档并提交、规范自审、等待用户最终批准。
 → 用户批准规范后，进入下一步。
 
 **2. `superpowers:writing-plans`**
