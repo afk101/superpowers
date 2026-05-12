@@ -76,7 +76,7 @@ test-driven-development
     ↓  ← 声称修复完成前
 verification-before-completion
     ↓  ← 可选：存在 3+ 个相互独立的 bug 时
-dispatching-parallel-agents
+parallel-bug-fix
 ```
 
 ### 各步说明
@@ -96,7 +96,7 @@ dispatching-parallel-agents
 **3. `superpowers:verification-before-completion`**（声称修复完成前）
 运行完整测试套件，凭输出确认修复有效且无回归。
 
-**4. `superpowers:dispatching-parallel-agents`**（可选）
+**4. `superpowers:parallel-bug-fix`**（可选）
 当存在 3 个或以上**相互独立**的 bug 时使用。每个 bug 分配独立 agent，给定具体范围、明确目标、约束条件（不修改其他代码）、预期输出。所有 agent 完成后：检查摘要 → 确认修复无冲突 → 运行完整测试套件。
 
 不适用场景：bug 相互关联、需要完整系统状态、agent 会编辑同一文件。

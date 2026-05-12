@@ -1,9 +1,9 @@
 ---
-name: dispatching-parallel-agents
-description: Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies
+name: parallel-bug-fix
+description: 仅在 Bug 修复流程中，存在 3 个或以上相互独立的 bug 时使用（由 workflow-router 调用，或用户明确调用）。为每个独立 bug 派遣专属 agent 并行调查修复，不适用于新功能开发。
 ---
 
-# Dispatching Parallel Agents（调度并行 Agent）
+# 并行 Bug 修复（Parallel Bug Fix）
 
 ## 概述
 
