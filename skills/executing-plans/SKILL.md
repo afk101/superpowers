@@ -32,9 +32,8 @@ description: 当你有书面实施计划需要在独立会话中执行并带有�
 ### 步骤 3: 完成开发
 
 所有任务完成并验证后:
-- 宣布: "我正在使用 finishing-a-development-branch 技能来完成这项工作。"
-- **必需子技能:** 使用 superpowers:finishing-a-development-branch
-- 遵循该技能以验证测试、呈现选项、执行选择
+- 运行完整测试套件，确认所有测试通过
+- 向用户汇报实施结果
 
 ## 何时停止并寻求帮助
 
@@ -65,6 +64,4 @@ description: 当你有书面实施计划需要在独立会话中执行并带有�
 ## 集成
 
 **必需工作流技能:**
-- **superpowers:using-git-worktrees** - 必需: 在开始前设置隔离工作空间
 - **superpowers:writing-plans** - 创建此技能执行的计划
-- **superpowers:finishing-a-development-branch** - 所有任务完成后完成开发

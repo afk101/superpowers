@@ -61,7 +61,7 @@ digraph process {
     "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
     "More tasks remain?" [shape=diamond];
     "Dispatch final code reviewer subagent for entire implementation" [shape=box];
-    "Use superpowers:finishing-a-development-branch" [shape=box style=filled fillcolor=lightgreen];
+    "Report completion to user" [shape=box style=filled fillcolor=lightgreen];
 
     "Read plan, extract all tasks with full text, note context, create TodoWrite" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Dispatch implementer subagent (./implementer-prompt.md)" -> "Implementer subagent asks questions?";
@@ -80,7 +80,7 @@ digraph process {
     "Mark task complete in TodoWrite" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
     "More tasks remain?" -> "Dispatch final code reviewer subagent for entire implementation" [label="no"];
-    "Dispatch final code reviewer subagent for entire implementation" -> "Use superpowers:finishing-a-development-branch";
+    "Dispatch final code reviewer subagent for entire implementation" -> "Report completion to user";
 }
 ```
 
@@ -196,7 +196,7 @@ Code reviewer: ✅ Approved
 [Dispatch final code-reviewer]
 Final reviewer: All requirements met, ready to merge
 
-完成!
+向用户汇报所有任务已完成。
 ```
 
 ## 优势
@@ -265,10 +265,8 @@ Final reviewer: All requirements met, ready to merge
 ## 集成
 
 **必需的工作流 skills:**
-- **superpowers:using-git-worktrees** - 必需:开始前设置隔离工作空间
 - **superpowers:writing-plans** - 创建此 skill 执行的计划
 - **superpowers:requesting-code-review** - 审查 subagent 的代码审查模板
-- **superpowers:finishing-a-development-branch** - 所有任务完成后完成开发
 
 **Subagents 应使用:**
 - **superpowers:test-driven-development** - Subagents 为每个任务遵循 TDD

@@ -13,8 +13,6 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 
 **开始时宣布:**"我正在使用 writing-plans skill 创建实施计划。"
 
-**上下文:** 这应该在专用的 worktree 中运行(由 brainstorming skill 创建)。
-
 **计划保存位置:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
 - (用户对计划位置的首选项会覆盖此默认值)
 
