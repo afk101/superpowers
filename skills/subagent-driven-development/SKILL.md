@@ -17,25 +17,15 @@ description: Use when executing implementation plans with independent tasks in t
 digraph when_to_use {
     "Have implementation plan?" [shape=diamond];
     "Tasks mostly independent?" [shape=diamond];
-    "Stay in this session?" [shape=diamond];
     "subagent-driven-development" [shape=box];
-    "executing-plans" [shape=box];
     "Manual execution or brainstorm first" [shape=box];
 
     "Have implementation plan?" -> "Tasks mostly independent?" [label="yes"];
     "Have implementation plan?" -> "Manual execution or brainstorm first" [label="no"];
-    "Tasks mostly independent?" -> "Stay in this session?" [label="yes"];
+    "Tasks mostly independent?" -> "subagent-driven-development" [label="yes"];
     "Tasks mostly independent?" -> "Manual execution or brainstorm first" [label="no - tightly coupled"];
-    "Stay in this session?" -> "subagent-driven-development" [label="yes"];
-    "Stay in this session?" -> "executing-plans" [label="no - parallel session"];
 }
 ```
-
-**对比 Executing Plans(并行会话):**
-- 同一会话(无上下文切换)
-- 每个任务使用全新的 subagent(无上下文污染)
-- 每个任务后进行两阶段审查:先规范符合性,再代码质量
-- 更快的迭代(任务间无需人工介入)
 
 ## 流程
 
@@ -207,11 +197,6 @@ Final reviewer: All requirements met, ready to merge
 - 并行安全(subagents 不会相互干扰)
 - Subagent 可以提问(工作前和工作期间)
 
-**对比 Executing Plans:**
-- 同一会话(无交接)
-- 持续进展(无需等待)
-- 自动审查检查点
-
 **效率提升:**
 - 无文件读取开销(控制器提供完整文本)
 - 控制器精确策划所需的上下文
@@ -270,6 +255,3 @@ Final reviewer: All requirements met, ready to merge
 
 **Subagents 应使用:**
 - **superpowers:test-driven-development** - Subagents 为每个任务遵循 TDD
-
-**替代工作流:**
-- **superpowers:executing-plans** - 用于并行会话而非同会话执行

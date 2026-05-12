@@ -47,7 +47,7 @@ description: Use when you have a spec or requirements for a multi-step task, bef
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -131,20 +131,9 @@ git commit -m "feat: add specific feature"
 
 ## 执行移交
 
-保存计划后,提供执行选择:
+保存计划后，直接移交执行：
 
-**"计划完成并保存到 `docs/superpowers/plans/<filename>.md`。两种执行选项:**
+**"计划完成并保存到 `docs/superpowers/plans/<filename>.md`。"**
 
-**1. Subagent-Driven (推荐)** - 我为每个任务调度一个新的 subagent,任务之间进行审查,快速迭代
-
-**2. Inline Execution** - 在此会话中使用 executing-plans 执行任务,带检查点的批量执行
-
-**选择哪种方式?"**
-
-**如果选择 Subagent-Driven:**
 - **必需的子技能:** 使用 superpowers:subagent-driven-development
-- 每个任务一个新 subagent + 两阶段审查
-
-**如果选择 Inline Execution:**
-- **必需的子技能:** 使用 superpowers:executing-plans
-- 带检查点的批量执行以供审查
+- 每个任务一个新 subagent + 两阶段审查（规范符合性 → 代码质量）
