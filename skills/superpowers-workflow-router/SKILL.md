@@ -60,7 +60,7 @@ writing-plans        ← 基于 spec 制定修复计划
 **前置步骤说明：**
 
 **`superpowers:systematic-debugging`**
-调查阶段，先于一切其他行动。遇到信息盲区时向用户提问，持续迭代 findings，直到根本原因明确。严格按三个调查阶段执行：
+调查阶段，先于一切其他行动。遇到信息盲区时向用户提问，持续迭代 findings，直到根本原因明确。执行 Phase 1-3（调查阶段），**Phase 4（实现）不在此执行，由后续 brainstorming → writing-plans → 实现阶段负责**：
 - **Phase 1** 根本原因调查：创建 findings → 读错误 → 复现 → 检查最近变更 → **遇到不确定时向用户提问** → 收集证据 → 追踪数据流到源头
 - **Phase 2** 模式分析：找可工作的类似实现，逐行对比差异
 - **Phase 3** 假设与测试：单一假设，最小变更验证，确认根本原因
@@ -80,7 +80,7 @@ writing-plans        ← 基于 spec 制定修复计划
 → 计划保存完毕后，进入实现阶段。
 
 **`superpowers:parallel-bug-fix`**（替代 subagent-driven-development，当存在 3+ 个相互独立的 bug 时）
-当 bug 数量达到 3 个或以上且相互独立时，用此 skill **替代** subagent-driven-development 作为实现手段。每个 bug 分配独立 agent，给定具体范围、明确目标、约束条件（不修改其他代码）、预期输出。所有 agent 完成后：检查摘要 → 确认修复无冲突 → 继续走 requesting-code-review → receiving-code-review → verification-before-completion。
+当 bug 数量达到 3 个或以上且相互独立时，用此 skill **替代** subagent-driven-development 作为实现手段。每个 bug 分配独立 agent，给定具体范围、明确目标、约束条件（不修改其他代码）、预期输出。所有 agent 完成后：检查摘要 → 确认修复无冲突 → 派遣 final code reviewer 全量审查并处理反馈 → 进入 verification-before-completion。
 不适用场景：bug 相互关联、需要完整系统状态、agent 会编辑同一文件。
 
 ---
@@ -92,9 +92,8 @@ writing-plans        ← 基于 spec 制定修复计划
 ```
 subagent-driven-development
     ↓  ← 每个任务内部：implementer subagent 遵循 test-driven-development（先写失败测试，再写实现）
-    ↓  ← 所有任务完成后，主 agent 执行以下两步：
-requesting-code-review   ← 主 agent 派遣 code-reviewer subagent，全量审查所有变更
-receiving-code-review    ← 主 agent 拿到报告后处理反馈
+         → spec 合规审查 → 代码质量审查
+    ↓  ← 所有任务完成后：派遣 final code reviewer 全量审查，主 agent 处理反馈
     ↓  ← 声称完成前：
 verification-before-completion
 ```
@@ -105,13 +104,7 @@ verification-before-completion
 - implementer 完成后：派遣 spec 合规审查 subagent
 - spec 合规通过后：派遣代码质量审查 subagent
 - 任一审查发现问题 → implementer 修复 → 再次审查，直到批准
-- 所有任务完成后：派遣最终 code reviewer subagent 全量审查
-
-**`superpowers:requesting-code-review`**（所有任务全部完成后，主 agent 执行一次）
-获取 BASE_SHA（本次开发起点）和 HEAD_SHA，使用模板派遣 code-reviewer subagent，等待返回分级报告（Critical / Important / Minor）。
-
-**`superpowers:receiving-code-review`**（紧跟上一步，主 agent 执行）
-拿到审查报告后按规范处理：验证每条建议的技术合理性，按优先级实施（Critical 立即修复，Important 修复后才继续，Minor 记录后处理），每条单独测试，有据反驳错误建议。禁止表演性同意。
+- 所有任务完成后：派遣 final code reviewer subagent 全量审查，主 agent 按优先级处理反馈（Critical 立即修复，Important 修复后才继续，Minor 记录后处理），有据反驳错误建议，禁止表演性同意
 
 **`superpowers:verification-before-completion`**（所有任务完成，声称完成前）
 运行完整验证命令，凭输出证据声明完成。禁止"应该通过"、"看起来正确"等未验证表述。
